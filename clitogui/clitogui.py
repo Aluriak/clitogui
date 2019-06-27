@@ -63,3 +63,6 @@ def clitogui(parser_function):
             return argparse_to_gui(parser_function)
         else:
             raise TypeError("Not supported parser")
+
+# shortcut
+on = clitogui

@@ -3,9 +3,9 @@ Python package to generate a GUI from argparse CLI.
 
 Just add the decorator to the main or parser function:
 
-    from clitogui import clitogui
+    import clitogui
 
-    @clitogui
+    @clitogui.on
     def create_parser() -> argparse.ArgumentParser:
         """
         Function to define the parser
