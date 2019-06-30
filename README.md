@@ -48,7 +48,30 @@ See the [dedicated example](examples/interactive-gui.py) for a better overview.
 - pyQt5
 
 ## Supported parser:
- - Argparse
+- [Argparse](https://docs.python.org/dev/library/argparse.html)
+- [docopt](http://docopt.org)
+
+### docopt support limit
+Docopt enables very flexible constructions, such as (taken from official example):
+
+      naval_fate.py ship <name> move <x> <y> [--speed=<kn>]
+
+Because of the positional argument between two subparsers,
+such an interface cannot be perfectly emulated by argparse, that can achieve these non-perfect solutions:
+
+      naval_fate.py ship move <name> <x> <y> [--speed=<kn>]
+      naval_fate.py ship <name> <move> <x> <y> [--speed=<kn>]
+
+In the first reproduction, all subparsers are moved on the first places.
+In the second one, an argument `<move>` is added, allowing the user to choose between 1 value: `move`.
+
+In order to keep the code simple and readable, the first solution has been selected.
+If you ever want to use that code to bridge accurately the docopt API,
+you will need to adapt that part, and it may be quite complex to handle this kind of CLI:
+
+      naval_fate.py ship <name> move <x> <y> [--speed=<kn>]
+      naval_fate.py ship <idx>  shift <x> [--speed=<kn>]
+
 
 ### Argparse
 See [examples/argparse_full_example.py](examples/argparse_full_example.py) for an example of supported features of argparse.

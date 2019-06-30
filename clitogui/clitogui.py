@@ -6,9 +6,11 @@ argument in a CLI form.
 """
 
 from functools import wraps
+
+from docopt import docopt
 from argparse import ArgumentParser
 
-from .argument_extractor import ExtractedParser
+from .argument_extractor import ExtractedParser, docopt_wrapper
 from .gui import Interface
 from .interactive_gui import InteractiveInterface
 
@@ -49,6 +51,18 @@ def make_clitogui(gui_object, *args, **kwargs):
             else:
                 raise TypeError("Not supported parser: " + repr(parser_func))
             return parser
+
+        if parser_function is docopt:  # special case because docopt API is special
+            @wraps(parser_function)
+            def decorated_function(doc:str, *args, **kwargs):
+                print('CALLING FOR FIRST TIME')
+                parser = parser_function(doc, *args, **kwargs)
+                if isinstance(parser, ArgumentParser):
+                    # Saving the old argument parser for later, replacing it by our own
+                    patch_parser(parser)
+                else:
+                    raise TypeError("Not supported parser: " + repr(parser_func))
+                return parser
 
         return decorated_function
     return clitogui
